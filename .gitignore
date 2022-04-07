@@ -1,0 +1,15 @@
+inst/doc
+doc
+Meta
+.Rproj.user
+*.Rhistory
+COINr.Rproj
+.Rprofile
+/doc/
+/Meta/
+cran_submission_notes.md
+to-do.Rmd
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
