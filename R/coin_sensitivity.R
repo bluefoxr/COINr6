@@ -232,7 +232,7 @@ sensitivity <- function(COIN, v_targ, SA_specs, N, SA_type = "UA", NrepWeights =
   # of SA_specs. We exclude the weights here as has different structure. If it exists, we add one to the number
   # of parameters, since weights are treated as a single parameter
 
-  paranames <- names(purrr::flatten(SA_specs[-which(names(SA_specs)=="weights")]))
+  paranames <- names(purrr::flatten(SA_specs[names(SA_specs)!="weights"]))
   # get full names, including weights. We need this for labelling later on, as we need to know
   # the order as well
   paranames_all <- names(purrr::flatten(SA_specs))
@@ -250,7 +250,7 @@ sensitivity <- function(COIN, v_targ, SA_specs, N, SA_type = "UA", NrepWeights =
     npara_all <- npara_all + 1
     # also we need to generate the alternative sets of weights. Do this with function.
     wlist <- noisyWeights(COIN$Parameters$Weights[[SA_specs$weights$Nominal]],
-                 noise_specs = SA_specs$weights$NoiseSpecs, Nrep = NrepWeights)
+                          noise_specs = SA_specs$weights$NoiseSpecs, Nrep = NrepWeights)
   }
 
 
@@ -298,7 +298,7 @@ sensitivity <- function(COIN, v_targ, SA_specs, N, SA_type = "UA", NrepWeights =
     }
 
     SAlist <- list(Scores = SAres,
-                Parameters = Xpara)
+                   Parameters = Xpara)
 
   } else if (store_results == "results+method") {
 
@@ -311,8 +311,8 @@ sensitivity <- function(COIN, v_targ, SA_specs, N, SA_type = "UA", NrepWeights =
     }
 
     SAlist <- list(Scores = SAres,
-                Parameters = Xpara,
-                Methods = SAmethods)
+                   Parameters = Xpara,
+                   Methods = SAmethods)
 
   } else if (store_results == "results+COIN") {
 
@@ -325,8 +325,8 @@ sensitivity <- function(COIN, v_targ, SA_specs, N, SA_type = "UA", NrepWeights =
     }
 
     SAlist <- list(Scores = SAres,
-                Parameters = Xpara,
-                COINs = SAmethods)
+                   Parameters = Xpara,
+                   COINs = SAmethods)
   }
 
   ### POST PROCESSING ### ---------------------------------------------------------
@@ -567,9 +567,9 @@ plotSARanks <- function(SAresults, plot_units = NULL, order_by = "nominal",
 
   # first, pivot to long
   stats_long <- tidyr::pivot_longer(rnks,
-                               cols = c("Median", "Q5", "Q95"),
-                               names_to = "Statistic",
-                               values_to = "Rank")
+                                    cols = c("Median", "Q5", "Q95"),
+                                    names_to = "Statistic",
+                                    values_to = "Rank")
 
   # colours
   if(is.null(dot_colour)){
@@ -581,7 +581,7 @@ plotSARanks <- function(SAresults, plot_units = NULL, order_by = "nominal",
 
   # generate plot
   stats_long %>%
-  ggplot2::ggplot(aes(x = .data$Rank, y = .data$UnitCode)) +
+    ggplot2::ggplot(aes(x = .data$Rank, y = .data$UnitCode)) +
     ggplot2::geom_line(aes(group = .data$UnitCode), color = line_colour) +
     ggplot2::geom_point(aes(color = .data$Statistic, shape = .data$Statistic, size= .data$Statistic)) +
     ggplot2::scale_shape_manual(values = c(16, 15, 15)) +
@@ -750,11 +750,11 @@ SA_estimate <- function(yy, N, d, Nboot = NULL){
     SensInd$Si_q5 <- apply(Si_boot, MARGIN = 1,
                            function(xx) stats::quantile(xx, probs = 0.05, na.rm = TRUE))
     SensInd$Si_q95 <- apply(Si_boot, MARGIN = 1,
-                           function(xx) stats::quantile(xx, probs = 0.95, na.rm = TRUE))
-    SensInd$STi_q5 <- apply(STi_boot, MARGIN = 1,
-                           function(xx) stats::quantile(xx, probs = 0.05, na.rm = TRUE))
-    SensInd$STi_q95 <- apply(STi_boot, MARGIN = 1,
                             function(xx) stats::quantile(xx, probs = 0.95, na.rm = TRUE))
+    SensInd$STi_q5 <- apply(STi_boot, MARGIN = 1,
+                            function(xx) stats::quantile(xx, probs = 0.05, na.rm = TRUE))
+    SensInd$STi_q95 <- apply(STi_boot, MARGIN = 1,
+                             function(xx) stats::quantile(xx, probs = 0.95, na.rm = TRUE))
 
   }
 
