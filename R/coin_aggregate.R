@@ -135,6 +135,7 @@ aggregate <- function(COIN, agtype = "arith_mean", agweights = NULL, dset = NULL
 
   # the columns with aggregation info in them
   agg_cols <- metad %>% dplyr::select(dplyr::starts_with("Agg"))
+  iMeta <- as.data.frame(metad[c("IndCode", names(agg_cols))])
 
   for (aglev in 1:(COIN$Parameters$Nlevels - 1)){ # Loop over number of aggregation levels
 
@@ -149,13 +150,21 @@ aggregate <- function(COIN, agtype = "arith_mean", agweights = NULL, dset = NULL
       sub_codes <- dplyr::pull(agg_cols, aglev-1) # the ingredients to aggregate are aggregate level below
     }
 
+    # get codes for just this level and the one below, with no repetitions
+    iMeta_lev <- unique(iMeta[c(aglev, aglev + 1)])
+
     agtype_lev <- agtypes[aglev] # the aggregation type for this level
 
     for (agroup in 1:length(agg_names)){ # loop over aggregation groups, inside the given agg level
 
-      iselect <- sub_codes[metad[,agg_colname]==agg_names[agroup]] %>% unique() # get indicator names belonging to group
+      #iselect_old <- sub_codes[metad[,agg_colname]==agg_names[agroup]] %>% unique() # get indicator names belonging to group
+
+      iselect <- iMeta_lev[iMeta_lev[2] == agg_names[agroup], 1]
+
       # get weights belonging to group, using codes
-      weights_group <- weights_lev[unique(sub_codes) %in% iselect]
+      # note the following line was a bug, now fixed
+      # weights_group_old <- weights_lev[unique(sub_codes) %in% iselect_old]
+      weights_group <- agweights$Weight[match(iselect, agweights$Code)]
 
       # aggregate. NOTE: this is is not a very efficient way to do these operations and will be updated
       # at some point.
@@ -174,7 +183,7 @@ aggregate <- function(COIN, agtype = "arith_mean", agweights = NULL, dset = NULL
       } else if (agtype_lev == "geom_mean_rescaled"){
         newcol <- ind_data %>% dplyr::select(dplyr::all_of(iselect)) %>% dplyr::rowwise() %>%
           dplyr::transmute(!!agg_names[agroup] := geoMean_rescaled(dplyr::c_across(cols = dplyr::everything()),
-                                                          w = weights_group))
+                                                                   w = weights_group))
       } else if (agtype_lev == "harm_mean"){
         newcol <- ind_data %>% dplyr::select(dplyr::all_of(iselect)) %>% dplyr::rowwise() %>%
           dplyr::transmute(!!agg_names[agroup] := harMean(dplyr::c_across(cols = dplyr::everything()),
@@ -194,7 +203,7 @@ aggregate <- function(COIN, agtype = "arith_mean", agweights = NULL, dset = NULL
 
         newcol <- ind_data %>% dplyr::select(dplyr::all_of(iselect)) %>% dplyr::rowwise() %>%
           dplyr::transmute(!!agg_names[agroup] := agfunc(dplyr::c_across(cols = dplyr::everything()),
-                                                          w = weights_group))
+                                                         w = weights_group))
 
       } else {
         stop("Aggregation type not recognised.")
