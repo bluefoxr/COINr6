@@ -145,7 +145,7 @@ If a composite indicator is built from scratch, it is easy to generate an enviro
 A COIN is a hierarchical list (a list of lists) which has been assigned an S3 class label of a "COIN". Before explaining how a COIN is actually constructed, it is useful to see what it looks like. To see an example, call *COINr*'s built in demo function:
 
 ```{r, message=F, warning=F}
-library(COINr)
+library(COINr6)
 ASEM <- COINr::build_ASEM()
 print(class(ASEM))
 ```
@@ -198,7 +198,7 @@ The indicator data is a data frame which specifies the value of each indicator, 
 An example of the format required is in *COINr*'s inbuilt ASEM data set (see [*COINr* features]):
 
 ```{r}
-library(COINr)
+library(COINr6)
 head(COINr::ASEMIndData[1:8])
 head(COINr::ASEMIndData[9:16])
 ```
@@ -547,32 +547,32 @@ This is powered by *ggplot2*, but is particularly useful because it exploits kno
 For example, to plot distributions of the pillars (i.e. level 2) inside the connectivity sub-index:
 
 ```{r  ConnDists, message=F, warning=F, fig.width=7, fig.cap="Pillar distributions in the connectivity sub-index."}
-COINr::plotIndDist(ASEM, dset = "Aggregated", icodes = "Conn",
+COINr6::plotIndDist(ASEM, dset = "Aggregated", icodes = "Conn",
                     aglev = 2, type = "Histogram")
 ```
 
-This syntax is followed by many *COINr* functions, and is powered by an auxiliary function `COINr::getIn()` which may also be useful for general tasks involving selecting groups of indicator data.
+This syntax is followed by many *COINr* functions, and is powered by an auxiliary function `COINr6::getIn()` which may also be useful for general tasks involving selecting groups of indicator data.
 
 ## Multivariate analysis
 
-*COINr* includes a set of tools for multivariate analysis, based mostly around linear correlation. In the first place, correlation maps can easily be generated, following a similar syntax to `COINr::plotIndDist()` and others. *COINr* has its own in-built correlation maps (albeit powered by *ggplot2*) because they are adapted to also account for the structure of the index. In the simplest case this gives a visualisation of the correlation of any group of indicators or aggregates against another, or against themselves. For example, to see the correlations of the indicators inside one of the aggregation groups (in this case inside the "P2P" pillar):
+*COINr* includes a set of tools for multivariate analysis, based mostly around linear correlation. In the first place, correlation maps can easily be generated, following a similar syntax to `COINr6::plotIndDist()` and others. *COINr* has its own in-built correlation maps (albeit powered by *ggplot2*) because they are adapted to also account for the structure of the index. In the simplest case this gives a visualisation of the correlation of any group of indicators or aggregates against another, or against themselves. For example, to see the correlations of the indicators inside one of the aggregation groups (in this case inside the "P2P" pillar):
 
 ```{r  corr1, message=F, warning=F, fig.width=6, fig.height=5, fig.cap="Correlations within P2P pillar."}
-COINr::plotCorr(ASEM, dset = "Raw", icodes = "P2P")
+COINr6::plotCorr(ASEM, dset = "Raw", icodes = "P2P")
 ```
 
-So far, this is similar to other correlation plot packages. To better adapt to the composite indicator context, `COINr::plotCorr()` also allows to only plot within aggregation groups. So for example, to plot correlations of pillars only with pillars in the same sub-index:
+So far, this is similar to other correlation plot packages. To better adapt to the composite indicator context, `COINr6::plotCorr()` also allows to only plot within aggregation groups. So for example, to plot correlations of pillars only with pillars in the same sub-index:
 
 ```{r  corr2, message=F, warning=F, fig.width=4, fig.height=4, fig.cap="Grouped correlations within sub-indexes."}
-COINr::plotCorr(ASEM, dset = "Aggregated", aglevs = c(2,3))
+COINr6::plotCorr(ASEM, dset = "Aggregated", aglevs = c(2,3))
 ```
 
-The idea here is to focus on what is important, which is that very highly correlated indicators or aggregates within the same group could imply redundancies. Meanwhile, negative correlations signal problems with aggregation, such as information loss. The `COINr::plotCorr()` function gives many options, including a discrete colour map, grouping by any level, and more. To give quick access to correlation matrices without generating plots, use the helper function `COINr::getCorr()`.
+The idea here is to focus on what is important, which is that very highly correlated indicators or aggregates within the same group could imply redundancies. Meanwhile, negative correlations signal problems with aggregation, such as information loss. The `COINr6::plotCorr()` function gives many options, including a discrete colour map, grouping by any level, and more. To give quick access to correlation matrices without generating plots, use the helper function `COINr6::getCorr()`.
 
-*COINr* also includes interactive HTML correlation plots powered by *plotly* via `COINr::iplotCorr()`, and a *shiny* app which allows weights to be interactively adjusted and the correlation effects to be examined, following a similar logic to [this paper](https://doi.org/10.1016/j.ecolind.2017.03.056). To access this app, call:
+*COINr* also includes interactive HTML correlation plots powered by *plotly* via `COINr6::iplotCorr()`, and a *shiny* app which allows weights to be interactively adjusted and the correlation effects to be examined, following a similar logic to [this paper](https://doi.org/10.1016/j.ecolind.2017.03.056). To access this app, call:
 
 ```{r, eval = F}
-ASEM <- COINr::rew8r(ASEM)
+ASEM <- COINr6::rew8r(ASEM)
 ```
 
 This will open an app (strictly, a *shiny* gadget) which allows weights to be adjusted and saved back to the COIN as new weight sets along side the original weights. COINs can have any number of named weight sets. A screenshot of the `rew8r()` app is shown below.
@@ -584,11 +584,11 @@ knitr::include_graphics("images/rew8r_screenshot-min.png")
 Further *COINr* features of multivariate analysis include fast bindings for R PCA functions, and calculation of Cronbach's alpha. While PCA is easily available in R via `stats::prcomp()`, *COINr* has a function `getPCA()` which wraps `stats::prcomp()` and makes it easier to interact with COINs, and follows the familiar *COINr* syntax. It serves both to give general PCA information, and to provide PCA weights for aggregation.
 
 ```{r}
-PCAres <- COINr::getPCA(ASEM, dset = "Aggregated",
+PCAres <- COINr6::getPCA(ASEM, dset = "Aggregated",
                         aglev = 2, out2 = "list")
 ```
 
-PCA must be performed on a specified group of indicators. Following *COINr* syntax, the `COINr::getPCA()` function returns PCA results, including weights, for any aggregation level and group(s) of indicators. In the example above, where `aglev = 2`, there are two aggregation groups - the pillars belonging to the Connectivity sub-index, and the pillars belonging to the Sustainability sub-index. This means that two PCAs were performed - one for the first group, and one for the second. In other words, `COINr::getPCA()` follows the structure of the index.
+PCA must be performed on a specified group of indicators. Following *COINr* syntax, the `COINr6::getPCA()` function returns PCA results, including weights, for any aggregation level and group(s) of indicators. In the example above, where `aglev = 2`, there are two aggregation groups - the pillars belonging to the Connectivity sub-index, and the pillars belonging to the Sustainability sub-index. This means that two PCAs were performed - one for the first group, and one for the second. In other words, `COINr6::getPCA()` follows the structure of the index.
 
 This is more evident when we examine the output:
 
@@ -600,7 +600,7 @@ Here, `PCAres$PCAresults` contains an entry for each aggregation group found in 
 Finally, *COINr* has a simple in-built function for calculating [Cronbach's alpha](https://en.wikipedia.org/wiki/Cronbach%27s_alpha), which can be directed at any data set and subset of indicators as with other functions. To see the consistency of the indicators within the "Physical" pillar of the ASEM data set:
 
 ```{r}
-COINr::getCronbach(ASEM, dset = "Raw", icodes = "Physical", aglev = 1)
+COINr6::getCronbach(ASEM, dset = "Raw", icodes = "Physical", aglev = 1)
 ```
 
 ## Adjustments and comparisons
@@ -624,20 +624,20 @@ ASEMAltNorm <- ASEM
 ASEMAltNorm$Method$normalise$ntype <- "borda"
 
 # Regenerate
-ASEMAltNorm <- COINr::regen(ASEMAltNorm, quietly = TRUE)
+ASEMAltNorm <- COINr6::regen(ASEMAltNorm, quietly = TRUE)
 ```
 
-Here a copy of the ASEM index is made. Then the normalisation method is changed by changing the `normalise$ntype` argument to `"borda"`. Finally, the new results are generated by calling `COINr::regen()`, which reruns the construction functions and regenerates the COIN data sets according the specifications in `.$Method`. Importantly, `COINr::regen()` reruns all functions that are recorded in the `.$Method` folder *in the order they appear in the folder*.
+Here a copy of the ASEM index is made. Then the normalisation method is changed by changing the `normalise$ntype` argument to `"borda"`. Finally, the new results are generated by calling `COINr6::regen()`, which reruns the construction functions and regenerates the COIN data sets according the specifications in `.$Method`. Importantly, `COINr6::regen()` reruns all functions that are recorded in the `.$Method` folder *in the order they appear in the folder*.
 
-Next, the two alternative COINs can be compared using `COINr::compTable()`.
+Next, the two alternative COINs can be compared using `COINr6::compTable()`.
 
 ```{r}
-comptab <- COINr::compTable(ASEM, ASEMAltNorm, dset = "Aggregated",
+comptab <- COINr6::compTable(ASEM, ASEMAltNorm, dset = "Aggregated",
                  isel = "Index")
 head(comptab, 10)
 ```
 
-This table is sorted by absolute rank change and shows that Malta and Portugal have been affected the most by altering the normalisation method. Another useful function is `COINr::compTableMulti()` which allows comparison of more than two COINs. For adding and removing indicators, *COINr* includes a short-cut function called `COINr::indChange()` which allows indicators to be added and removed, and the results regenerated, in a single command.
+This table is sorted by absolute rank change and shows that Malta and Portugal have been affected the most by altering the normalisation method. Another useful function is `COINr6::compTableMulti()` which allows comparison of more than two COINs. For adding and removing indicators, *COINr* includes a short-cut function called `COINr6::indChange()` which allows indicators to be added and removed, and the results regenerated, in a single command.
 
 COINs can be compared as long as they share a common indicator/aggregate code and common unit codes. This means that it is also possible to compare completely different indexes, as well as indexes with different sets of units (as long as they at least partially intersect).
 
@@ -655,9 +655,9 @@ $$ V_i= V[E(y|x_i)], \\ V_{i,j}=V[E(y|x_i,x_j)] - V[E(y|x_i)]-V[E(y|x_j)] $$
 
 and so on for higher terms. Here, $V(\cdot)$ denotes the variance operator, $E(\cdot)$ the expected value, and these terms are used directly as *sensitivity indices*, e.g. the *first order sensitivity index* $S_{i}=V_i/V(y)$ measures the contribution of the input $x_i$ to $V(y)$, without including interactions with other inputs. Since they are standardised by $V(y)$, each sensitivity index measures the *fraction of the variance* caused by each input (or interactions between inputs), and therefore the *fraction of the uncertainty*.
 
-In *COINr*, variance-based sensitivity analysis can be applied to a wide range of methodological assumptions and parameters used to construct a COIN. In theory, any argument of any of the construction functions given [Building a composite indicator] can be automatically perturbed. The function `COINr::sensitivity()` essentially performs a (structured) Monte Carlo analysis of the composite indicator following the methodology used in \cite{Saisana-al05}. In practice, this is done by altering construction function arguments stored in the COIN's `.$Method` folder and calling `COINr::regen()` to regenerate the results.
+In *COINr*, variance-based sensitivity analysis can be applied to a wide range of methodological assumptions and parameters used to construct a COIN. In theory, any argument of any of the construction functions given [Building a composite indicator] can be automatically perturbed. The function `COINr6::sensitivity()` essentially performs a (structured) Monte Carlo analysis of the composite indicator following the methodology used in \cite{Saisana-al05}. In practice, this is done by altering construction function arguments stored in the COIN's `.$Method` folder and calling `COINr6::regen()` to regenerate the results.
 
-To specify a sensitivity analysis, *COINr* needs to know which parameters to perturb, and what the alternative values should be. This is done by creating a named list which is input as an argument to `COINr::sensitivity()`. The following gives an example of this list, perturbing three assumptions (imputation method, normalisation method and weights).
+To specify a sensitivity analysis, *COINr* needs to know which parameters to perturb, and what the alternative values should be. This is done by creating a named list which is input as an argument to `COINr6::sensitivity()`. The following gives an example of this list, perturbing three assumptions (imputation method, normalisation method and weights).
 
 ```{r SAspecs, eval=F}
 # define noise to be applied to weights
@@ -677,7 +677,7 @@ The *names* of the first level of this list should be any of the seven construct
 function_name = list(argument_name = vector_or_list_of_alternatives)
 ```
 
-There is no restriction on the number of parameters that can be varied, or the number of alternatives. The exception to this general syntax is the weights. In construction, weights are input as an argument of `COINr::aggregate()`, but since this is a single argument, it only behaves as a single parameter. That means that we could test alternative weight sets as part of the sensitivity analysis:
+There is no restriction on the number of parameters that can be varied, or the number of alternatives. The exception to this general syntax is the weights. In construction, weights are input as an argument of `COINr6::aggregate()`, but since this is a single argument, it only behaves as a single parameter. That means that we could test alternative weight sets as part of the sensitivity analysis:
 
 ```{r SAspecsAggweights, eval=F}
 # example entry in SA_specs list of sensitivity() [not used here]
@@ -692,9 +692,9 @@ $$ w'_i = w_i + \epsilon_i, \; \; \epsilon_i \sim U[-\phi w_i, \phi w_i] $$
 
 where $w_i$ is a weight, $\epsilon_i$ is the added noise, and $\phi$ is a "noise factor". This means that setting $\phi = 0.25$, for example, would let $w_i$ vary between +/-25% of its nominal value, following a uniform distribution.
 
-The noise factor can be different (or zero) from one aggregation level to another in *COINr*. To specify this in the `COINr::sensitivity()` function, it is added as a "special" `weights` entry in the `SAspecs` list described above. It is special in the sense that this is the only entry that is allowed that is not a construction function name.
+The noise factor can be different (or zero) from one aggregation level to another in *COINr*. To specify this in the `COINr6::sensitivity()` function, it is added as a "special" `weights` entry in the `SAspecs` list described above. It is special in the sense that this is the only entry that is allowed that is not a construction function name.
 
-To actually run the analysis, call `COINr::sensitivity()`, using the specifications in the `SAspecs` list, and setting `v_targ = "Index"`, meaning that the index will be the target of the sensitivity analysis. Further, the number of replications is specified by the argument `N`. The `COINr::sensitivity()` function can be set to perform either an uncertainty analysis, which simply gives confidence intervals and distributions over ranks, or to perform a global sensitivity analysis. The latter is more computationally intensive but also includes the uncertainty analysis. Here the full sensitivity analysis is demonstrated. One important point is that *COINr* calculates sensitivity with respect to the *average absolute rank change*, between nominal and perturbed values.
+To actually run the analysis, call `COINr6::sensitivity()`, using the specifications in the `SAspecs` list, and setting `v_targ = "Index"`, meaning that the index will be the target of the sensitivity analysis. Further, the number of replications is specified by the argument `N`. The `COINr6::sensitivity()` function can be set to perform either an uncertainty analysis, which simply gives confidence intervals and distributions over ranks, or to perform a global sensitivity analysis. The latter is more computationally intensive but also includes the uncertainty analysis. Here the full sensitivity analysis is demonstrated. One important point is that *COINr* calculates sensitivity with respect to the *average absolute rank change*, between nominal and perturbed values.
 
 ```{r runSA, eval = F}
 # This will take a few minutes to run
@@ -708,30 +708,30 @@ SAresults <- sensitivity(ASEM, v_targ = "Index",
 SAresults <- readRDS("SAresults_ASEMexample.rds")
 ```
 
-The output of the sensitivity analysis is a list which has the recorded scores for each iteration, ranks for each iteration, as well as confidence intervals for ranks. Additionally it outputs a data frame `.$Sensitivity`, which gives first and total order sensitivity indices for each input variable. Moreover, if `Nboot` is specified in `COINr::sensitivity()`, it provides estimated confidence intervals for each sensitivity index using bootstrapping.
+The output of the sensitivity analysis is a list which has the recorded scores for each iteration, ranks for each iteration, as well as confidence intervals for ranks. Additionally it outputs a data frame `.$Sensitivity`, which gives first and total order sensitivity indices for each input variable. Moreover, if `Nboot` is specified in `COINr6::sensitivity()`, it provides estimated confidence intervals for each sensitivity index using bootstrapping.
 
 These outputs can be inspected directly, or by *COINr*'s plotting functions for sensitivity analysis, `plotSA()` and `plotSARanks()`.
 
 ```{r plotUAranks, message=F, warning=F, fig.width=7, fig.height=4, fig.cap="Confidence intervals on index ranks."}
-COINr::plotSARanks(SAresults)
+COINr6::plotSARanks(SAresults)
 ```
 
 This plot orders the units by their nominal ranks, and plots the median rank across all the replications of the uncertainty analysis, as well as the 5th and 95th percentile rank values. The ranks are the focus of an uncertainty analysis because scores can change drastically depending on the method.
 
 ```{r plotSAbar, message=F, warning=F, fig.width=4, fig.height=3, fig.cap="Sensitivity indices of uncertain assumptions."}
 # plot bar chart
-COINr::plotSA(SAresults, ptype = "bar")
+COINr6::plotSA(SAresults, ptype = "bar")
 ```
 
 This plot shows the three uncertainties that we introduced on the x-axis: the imputation type, the normalisation type, and the weights. The y-axis is the sensitivity index, and the total height of each bar is the total effect index $S_{Ti}$, i.e. the uncertainty caused by the variable on its own (the *main effect*) as well as its interactions. Then each bar is divided into the interaction effects and the main effects.
 
-Other outputs of `COINr::plotSA()` include bar charts and box plots.
+Other outputs of `COINr6::plotSA()` include bar charts and box plots.
 
 ```{r plotSApie, fig.width=4, fig.height=3}
 # plot bar chart
-COINr::plotSA(SAresults, ptype = "pie") +
+COINr6::plotSA(SAresults, ptype = "pie") +
   ggplot2::theme(text = ggplot2::element_text(size = 10))
-COINr::plotSA(SAresults, ptype = "box") +
+COINr6::plotSA(SAresults, ptype = "box") +
   ggplot2::theme(text = ggplot2::element_text(size = 8))
 ```
 
@@ -778,10 +778,10 @@ system.file("UnitReport", "unit_report_source.Rmd", package = "COINr")
 The example template illustrates that the COIN is passed into the R Markdown document, so that anything that is inside the COIN can be accessed and used for generating tables, figures and text, using *COINr* functions or otherwise. To see the example scorecard for any given unit, run:
 
 ```{r, eval=F}
-COINr::getUnitReport(ASEM, usel = "NZL", out_type = ".html")
+COINr6::getUnitReport(ASEM, usel = "NZL", out_type = ".html")
 ```
 
-where the output is not shown here for space reasons, but includes some basic information about the rank of the country, its ranks in key dimensions, as well as indicators in which it has the highest and lowest ranks. It also includes a bar chart and a radar chart which compares with the median scores. `COINr::getUnitReport()` also works with vectors of unit codes, so can be used to generate reports for all units in one command.
+where the output is not shown here for space reasons, but includes some basic information about the rank of the country, its ranks in key dimensions, as well as indicators in which it has the highest and lowest ranks. It also includes a bar chart and a radar chart which compares with the median scores. `COINr6::getUnitReport()` also works with vectors of unit codes, so can be used to generate reports for all units in one command.
 
 Being an R Markdown document, the output can be either an HTML document, a Word document, or a pdf. It's important to note that if the output is pdf or a Word doc, this is a *static document* which cannot include interactive plots such as those from *plotly*, *COINr*'s iplot functions and any other Javascript/HTML figures. To use interactive plots in static documents, install the webshot package and the "PhantomJS" executable. To do this, run:
 
@@ -792,12 +792,12 @@ webshot::install_phantomjs()
 
 This effectively renders the figures to HTML, then takes a static snapshot of each figure and pastes it into your static document.
 
-Clearly, the template can be customised by editing the example that fits your requirements. The `COINr::getUnitReport()` function can be directed to read any template using the `rmd_template` argument which should point to a valid parameterised R Markdown template.
+Clearly, the template can be customised by editing the example that fits your requirements. The `COINr6::getUnitReport()` function can be directed to read any template using the `rmd_template` argument which should point to a valid parameterised R Markdown template.
 
 # Discussion and Conclusions {#Sec:DiscConc}
 
 *COINr* is likely the most fully-featured package and development environment for composite indicators to date, in any software language. The aim is to provide a set of tools that allows composite indicators to be developed and presented quickly and accurately, with a rich set of statistical tools that are easy to access, including full global sensitivity analysis.
 
-Some plans are already in the pipeline for future releases. In the first place, readers may notice that there is no mention of panel data, i.e. observations of units and indicators for various points in time.  At the moment, *COINr* does not have an explicit feature for dealing with panel data. One reason for this is that typically, the methodology and the indicators (and units) included or excluded in a composite indicator vary from one year to the next. For now, our recommendation is to construct separate COINs for each year of data and arrange them in a list or data frame, then use `apply()` or *purrr*-style operations to simultaneously apply construction functions to the set of COINs. In future *COINr* releases, the intention is to adapt at least some *COINr* functions to deal with panel data automatically, e.g. `COINr::assemble()` would automatically create a set of COINs from a single set of panel data; and construction functions, as well as some plotting and results functions, can handle COIN-sets automatically.
+Some plans are already in the pipeline for future releases. In the first place, readers may notice that there is no mention of panel data, i.e. observations of units and indicators for various points in time.  At the moment, *COINr* does not have an explicit feature for dealing with panel data. One reason for this is that typically, the methodology and the indicators (and units) included or excluded in a composite indicator vary from one year to the next. For now, our recommendation is to construct separate COINs for each year of data and arrange them in a list or data frame, then use `apply()` or *purrr*-style operations to simultaneously apply construction functions to the set of COINs. In future *COINr* releases, the intention is to adapt at least some *COINr* functions to deal with panel data automatically, e.g. `COINr6::assemble()` would automatically create a set of COINs from a single set of panel data; and construction functions, as well as some plotting and results functions, can handle COIN-sets automatically.
 
-The same can be said for unit groups. Currently, the grouping columns of indicator data are only used by a few functions, such as `COINr::impute()` and some plotting functions. *COINr* aims to gradually increase the support for groups, so that e.g. aggregation and normalisation can be performed on groups - this would allow, for example, developing separate indexes for each group -- some composite indicators already group by unit size, see e.g. the [Cultural and Creative Cities Monitor](https://composite-indicators.jrc.ec.europa.eu/cultural-creative-cities-monitor).
+The same can be said for unit groups. Currently, the grouping columns of indicator data are only used by a few functions, such as `COINr6::impute()` and some plotting functions. *COINr* aims to gradually increase the support for groups, so that e.g. aggregation and normalisation can be performed on groups - this would allow, for example, developing separate indexes for each group -- some composite indicators already group by unit size, see e.g. the [Cultural and Creative Cities Monitor](https://composite-indicators.jrc.ec.europa.eu/cultural-creative-cities-monitor).
