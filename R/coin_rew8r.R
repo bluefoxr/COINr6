@@ -426,11 +426,26 @@ weights2corr <- function(COIN, w, aglevs = NULL, icodes = NULL,
   out1 <- getIn(COIN2, dset = "Aggregated", icodes = icodes[[1]], aglev = aglevs[1])
   idata1 <- out1$ind_data_only
   idata2 <- getIn(COIN2, dset = "Aggregated", icodes = icodes[[2]], aglev = aglevs[2])$ind_data_only
+
   # table of results data
-  dfres <- COIN2$Data$Aggregated[c("UnitName",
-                                   COIN$Parameters$AggCodes[[length(COIN$Parameters$AggCodes)]],
-                                   COIN$Parameters$AggCodes[[length(COIN$Parameters$AggCodes)-1]])]
-  dfres <- cbind("Rank"=rank(COIN2$Data$Aggregated$Index*-1, ties.method = "min"), dfres)
+
+  # first get highest agg level name (index basically)
+  index_code <- COIN$Parameters$AggCodes[[length(COIN$Parameters$AggCodes)]]
+
+  if(length(COIN$Parameters$AggCodes) > 1){
+
+    dfres <- COIN2$Data$Aggregated[c("UnitName",
+                                     index_code,
+                                     COIN$Parameters$AggCodes[[length(COIN$Parameters$AggCodes)-1]])]
+
+  } else {
+
+    dfres <- COIN2$Data$Aggregated[c("UnitName",
+                                     index_code)]
+
+  }
+
+  dfres <- cbind("Rank"=rank(COIN2$Data$Aggregated[index_code]*-1, ties.method = "min"), dfres)
   # get correlations
   cr = stats::cor(idata1, idata2, method = cortype, use = "pairwise.complete.obs")
 
@@ -1057,6 +1072,9 @@ weightOpt <- function(COIN, itarg, aglev, cortype = "pearson", optype = "balance
     # re-aggregate using these weights, get correlations
     crs <- weights2corr(COIN, wlist, aglevs = c(aglev, COIN$Parameters$Nlevels),
                         cortype = cortype)$cr$Correlation
+    if(any(is.na(crs))){
+      stop("Cannot optimise weights because one or more correlations is NA. This could be either because one indicator/aggregate has standard deviation of zero, or that there are not enough non-NA pairs in the data.", call. = FALSE)
+    }
 
     if (optype == "balance"){
       # normalise so they sum to 1
