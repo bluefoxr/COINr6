@@ -18,7 +18,7 @@
 build_ASEM <- function(){
 
   # assemble the COIN
-  ASEM <- assemble(IndData = COINr::ASEMIndData, IndMeta = COINr::ASEMIndMeta, AggMeta = COINr::ASEMAggMeta)
+  ASEM <- assemble(IndData = COINr6::ASEMIndData, IndMeta = COINr6::ASEMIndMeta, AggMeta = COINr6::ASEMAggMeta)
   # denominate data
   ASEM <- denominate(ASEM, dset = "Raw")
   # impute data using Asia/Europe group mean

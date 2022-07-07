@@ -30,7 +30,7 @@ scrs <- COIN$Results$FullScores
 ```
 
 ```{r barchart}
-library(COINr)
+library(COINr6)
 # plot bar chart
 iplotBar(COIN, dset = "Aggregated", isel = "Index", usel = usel, aglev = 4)
 ```

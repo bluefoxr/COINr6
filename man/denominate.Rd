@@ -55,7 +55,7 @@ Typically, the aim here is to convert extensive (size-related) variables into in
 of different sizes). There is also the option \code{scaledenoms} to scale denominators to avoid very small or very large numbers resulting.
 
 This function expects that \code{denominators$UnitCode} contains all unit codes found in the data frame to be denominated. Unused
-unit codes (rows) in \code{denominators} will be ignored. Note that some national-level denominator data is available inside COINr at \code{COINr::WorldDenoms}.
+unit codes (rows) in \code{denominators} will be ignored. Note that some national-level denominator data is available inside COINr at \code{COINr6::WorldDenoms}.
 
 See \href{https://bluefoxr.github.io/COINrDoc/denomination.html}{online documentation} for further details and examples.
 }

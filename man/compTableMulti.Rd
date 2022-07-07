@@ -44,7 +44,7 @@ ASEMAltNorm <- ASEM
 # Edit .$Method
 ASEMAltNorm$Method$normalise$ntype <- "borda"
 # Regenerate
-ASEMAltNorm <- COINr::regen(ASEMAltNorm, quietly = TRUE)
+ASEMAltNorm <- COINr6::regen(ASEMAltNorm, quietly = TRUE)
 # compare
 ctable <- compTableMulti(list(ASEM, ASEMAltNorm), dset = "Aggregated", isel = "Index")
 

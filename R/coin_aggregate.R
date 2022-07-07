@@ -63,7 +63,7 @@
 #' # normalise the data
 #' ASEM <- normalise(ASEM, dset = "Raw")
 #' # aggregate the data
-#' ASEM <- COINr::aggregate(ASEM, agtype="arith_mean", dset = "Normalised")
+#' ASEM <- COINr6::aggregate(ASEM, agtype="arith_mean", dset = "Normalised")
 #' # check aggregated data set exists
 #' stopifnot(!is.null(ASEM$Data$Aggregated))
 #'
@@ -406,7 +406,7 @@ harMean <- function(x, w = NULL){
 #'
 #' @examples
 #' # get a sample of a few indicators
-#' ind_data <- COINr::ASEMIndData[12:16]
+#' ind_data <- COINr6::ASEMIndData[12:16]
 #' # calculate outranking matrix
 #' outlist <- outrankMatrix(ind_data)
 #' # see fraction of dominant pairs (robustness)

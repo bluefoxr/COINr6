@@ -412,7 +412,7 @@ indChange <- function(COIN, add = NULL, drop = NULL, regen = FALSE){
     COIN <- regen(COIN, quietly = TRUE)
     message("COIN has been regenerated using new specs.")
   } else {
-    message("COIN parameters changed but results NOT updated. Use COINr::regen() to regenerate
+    message("COIN parameters changed but results NOT updated. Use COINr6::regen() to regenerate
 results or set regen = TRUE in indChange().")
   }
 

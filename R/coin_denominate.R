@@ -7,7 +7,7 @@
 #' of different sizes). There is also the option `scaledenoms` to scale denominators to avoid very small or very large numbers resulting.
 #'
 #' This function expects that `denominators$UnitCode` contains all unit codes found in the data frame to be denominated. Unused
-#' unit codes (rows) in `denominators` will be ignored. Note that some national-level denominator data is available inside COINr at `COINr::WorldDenoms`.
+#' unit codes (rows) in `denominators` will be ignored. Note that some national-level denominator data is available inside COINr at `COINr6::WorldDenoms`.
 #'
 #' See [online documentation](https://bluefoxr.github.io/COINrDoc/denomination.html) for further details and examples.
 #'
