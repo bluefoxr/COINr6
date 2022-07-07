@@ -13,3 +13,4 @@ to-do.Rmd
 .Rdata
 .httr-oauth
 .DS_Store
+/debug/
