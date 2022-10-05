@@ -1,7 +1,9 @@
-# COINr 0.6.1.9000
+# COINr 0.6.2
 
+* Added `coin_to_COIN()` function to convert new "coin" class to COINr6 "COIN" class
 * Added colour option to `plotframework()`
 * Fixed bug in `compareDF()` (resulting from tibbles vs data frames)
+# Fixed important bug with weights and some other bugs
 
 # COINr 0.6.1
 
