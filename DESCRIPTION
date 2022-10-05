@@ -1,7 +1,7 @@
 Package: COINr6
 Type: Package
 Title: Composite Indicator Construction and Analysis
-Version: 0.6.1.9000
+Version: 0.6.2
 Maintainer: William Becker <william.becker@bluefoxdata.eu>
 Description: A comprehensive high-level package for composite indicator construction and analysis. It is a "development environment"
     for composite indicators and scoreboards, which includes utilities for construction (indicator selection, denomination, imputation,
@@ -18,7 +18,7 @@ Encoding: UTF-8
 URL: https://bluefoxr.github.io/COINrDoc/
 BugReports: https://github.com/bluefoxr/COINr/issues
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Imports: 
     dplyr (>= 1.0.4),
     magrittr (>= 2.0.1),
