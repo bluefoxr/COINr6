@@ -68,6 +68,11 @@ assemble <- function(IndData, IndMeta, AggMeta, include = NULL, exclude = NULL,
             is.data.frame(IndMeta),
             is.data.frame(AggMeta))
 
+  # convert all to tibble to avoid any surprises
+  IndData <- tibble::as_tibble(IndData)
+  IndMeta <- tibble::as_tibble(IndMeta)
+  AggMeta <- tibble::as_tibble(AggMeta)
+
   # Do some checks first - make sure required cols are present
   if(!exists("UnitCode", IndData)){
     stop("No UnitCode column found in IndData. This column is required for assembling a COIN object.")
