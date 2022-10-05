@@ -46,3 +46,13 @@
 #'
 #' @source \url{https://data.worldbank.org/}
 "WorldDenoms"
+
+#' ASEM coin
+#'
+#' This is an example "coin" class object from the *newer* COINr >v1.0. It is to be
+#' used for examples with the [coin_to_COIN()] function.
+#'
+#' @format A "coin" class object
+#'
+#' @source \url{https://bluefoxr.github.io/COINr/reference/build_example_coin.html}
+"ASEM_newcoin"
