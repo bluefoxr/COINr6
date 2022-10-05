@@ -122,7 +122,7 @@ The main features can be summarised as features for *building*, features for *an
 
 Overall, this vignette aims to give an overview of the features of *COINr*, without going into fine detail about each due to space limitations. More detailed documentation is however available at an [online book about COINr](https://bluefoxr.github.io/COINrDoc/) and also by browsing the help file of each *COINr* function.
 
-For clarity, where *COINr* functions are used, they are explicitly labelled using the `COINr::function_name` syntax, to help show which functions are native to COINr.
+For clarity, where *COINr* functions are used, they are explicitly labelled using the `function_name` syntax, to help show which functions are native to COINr.
 
 # The COIN class
 
@@ -146,7 +146,7 @@ A COIN is a hierarchical list (a list of lists) which has been assigned an S3 cl
 
 ```{r, message=F, warning=F}
 library(COINr6)
-ASEM <- COINr::build_ASEM()
+ASEM <- build_ASEM()
 print(class(ASEM))
 ```
 
@@ -189,7 +189,7 @@ Although *COINr* functions are specifically built for use on COINs, many will al
 
 ## Assembling a COIN
 
-To build a COIN, three ingredients (data frames) are needed to begin with, and are used as inputs to the `COINr::assemble()` function, which outputs a COIN. This is the main starting point for both composite indicator construction and analysis in *COINr*. In short, they are the indicator data, the indicator metadata, and the aggregation metadata. Here, each will be explained separately and in detail since this is fundamental to using *COINr*.
+To build a COIN, three ingredients (data frames) are needed to begin with, and are used as inputs to the `assemble()` function, which outputs a COIN. This is the main starting point for both composite indicator construction and analysis in *COINr*. In short, they are the indicator data, the indicator metadata, and the aggregation metadata. Here, each will be explained separately and in detail since this is fundamental to using *COINr*.
 
 ### Indicator data
 
@@ -199,8 +199,8 @@ An example of the format required is in *COINr*'s inbuilt ASEM data set (see [*C
 
 ```{r}
 library(COINr6)
-head(COINr::ASEMIndData[1:8])
-head(COINr::ASEMIndData[9:16])
+head(ASEMIndData[1:8])
+head(ASEMIndData[9:16])
 ```
 
 Here only a few rows and columns are shown to illustrate. The ASEM data covers covering 51 Asian and European countries, at the national level, and uses 49 indicators. Notice that each row is an observation (here, a country), and each column is a variable (mostly indicators, but also other things). Look at the structure of the data frame, working from left to right:
@@ -230,7 +230,7 @@ Some important rules and tips to keep in mind are:
 The second data required to assemble a COIN specifies the *metadata* of each indicator. This serves two purposes: first, to give details about each indicator, such as its name, its units and so on; and second, to specify the structure of the index. The ASEM example illustrates this:
 
 ```{r}
-head(COINr::ASEMIndMeta)
+head(ASEMIndMeta)
 ```
 
 Notice that now, the table is flipped on its side (transposed), and each row is an indicator, and the columns specify attributes of indicators. This is to keep the data in a "tidy" format. Working through the columns one by one:
@@ -255,7 +255,7 @@ There is no restriction on the number of `Agg` columns and therefore the number 
 The final input for building a COIN is the aggregation metadata, which is also the simplest. Here's the example for the ASEM data set:
 
 ```{r}
-head(COINr::ASEMAggMeta)
+head(ASEMAggMeta)
 ```
 
 This data frame simply consists of four columns:
@@ -269,21 +269,21 @@ The codes specified here must be unique and not coincide with any other codes us
 
 ### Assembly
 
-The function to build the COIN is called `COINr::assemble()`. This function takes the three data frames mentioned and uses them to assemble a COIN.
+The function to build the COIN is called `assemble()`. This function takes the three data frames mentioned and uses them to assemble a COIN.
 
 ```{r, collapse=T}
-ASEM <- COINr::assemble(IndData = ASEMIndData, IndMeta = ASEMIndMeta,
+ASEM <- assemble(IndData = ASEMIndData, IndMeta = ASEMIndMeta,
                  AggMeta = ASEMAggMeta)
 ```
 
-This outputs a "COIN" which you can name as you want (here we have called it "ASEM"). Apart from building the COIN, `COINr::assemble()` does a few other things:
+This outputs a "COIN" which you can name as you want (here we have called it "ASEM"). Apart from building the COIN, `assemble()` does a few other things:
 
 * It checks that indicator codes are consistent between indicator data and indicator metadata
 * It checks that required columns, such as indicator codes, are present
 * It returns some basic information about the data that was input, such as the number of indicators, the number of units, the number of aggregation levels and the groups in each level. This is done so you can check what you have entered, and that it agrees with your expectations. This has been suppressed here for reasons of space.
 * It gives the option to include or exclude indicators from the input data set - this can be useful for producing alternative versions with different indicator sets, without having to alter the input data.
 
-In short, the aim is to trap any misspecifications early on at the assembly phase; `COINr::assemble()` gives informative error messages where discrepancies are found.
+In short, the aim is to trap any misspecifications early on at the assembly phase; `assemble()` gives informative error messages where discrepancies are found.
 
 # Building a composite indicator {#Sec:Building}
 
@@ -306,14 +306,14 @@ Function            Description
 Before building the composite indicator, it is always a good idea to look at the data. This helps to spot any unusual features and to understand how indicators relate to one another. *COINr* has many options for data visualisation. In the first place, the structure of the composite indicator can be visualised using a sunburst plot. This is powered by *plotly*.
 
 ```{r plotfwk, eval=FALSE}
-COINr::plotframework(ASEM)
+plotframework(ASEM)
 ```
 
 ```{r plotfwk2, echo=F, fig.align = 'center', out.width = "50%", fig.cap = "Framework plot of the ASEM index."}
 knitr::include_graphics("images/plotframework-min.png")
 ```
 
-*COINr* also has a built-in *shiny* app to compare indicator distributions interactively. This is suitable for rapidly exploring the data. To run the indicator visualisation app, simply run `COINr::indDash(ASEM)`. This will open a window that looks something like this:
+*COINr* also has a built-in *shiny* app to compare indicator distributions interactively. This is suitable for rapidly exploring the data. To run the indicator visualisation app, simply run `indDash(ASEM)`. This will open a window that looks something like this:
 
 ```{r indDash, echo=F, fig.align = 'center', out.width = "100%", fig.cap = "indDash screenshot"}
 knitr::include_graphics("images/inddash_screenshot-min.png")
@@ -321,11 +321,11 @@ knitr::include_graphics("images/inddash_screenshot-min.png")
 
 The `indDash()` app is purely illustrative - it does not return anything back to R, but simply displays the distributions of the existing indicators. It is particularly useful for visualising the effects of data treatment. More options for plotting will be described in the following sections.
 
-Another way to check the input data is to call `COINr::getStats()`. This returns a series of statistics which can be aimed at any of the data sets in the `.$Data` folder (the dot in `.$Data` refers to a generic COIN). These can be attached to the COIN, or to a separate list. Here we call `COINr::getStats()` to return indicator statistics on the raw data set.
+Another way to check the input data is to call `getStats()`. This returns a series of statistics which can be aimed at any of the data sets in the `.$Data` folder (the dot in `.$Data` refers to a generic COIN). These can be attached to the COIN, or to a separate list. Here we call `getStats()` to return indicator statistics on the raw data set.
 
 ```{r, collapse=T, message=F}
 # get stats
-ASEM <- COINr::getStats(ASEM, dset = "Raw", out2 = "COIN")
+ASEM <- getStats(ASEM, dset = "Raw", out2 = "COIN")
 
 # display stats table, first few columns/rows only
 stat_tab <- ASEM$Analysis$Raw$StatTable[1:8]
@@ -334,20 +334,20 @@ roundDF(head(stat_tab, 5))
 
 The columns of this table give all kinds of information from max, min, standard deviation, etc, to the presence of outliers and amount of missing data (columns have been omitted for brevity).
 
-Apart from the overall statistics for each indicator, `COINr::getStats` also returns a data frame indicating where outliers might be present (according to interquartile range), correlations between indicators and correlations between indicators and any denominators that were provided during the assembly of the COIN. This latter feature can suggest where indicators are strongly related to country (unit) size and may need denominating.
+Apart from the overall statistics for each indicator, `getStats` also returns a data frame indicating where outliers might be present (according to interquartile range), correlations between indicators and correlations between indicators and any denominators that were provided during the assembly of the COIN. This latter feature can suggest where indicators are strongly related to country (unit) size and may need denominating.
 
 ## Denomination
 
-Denomination involves dividing indicators by e.g. GDP or population to be able to compare small units/countries with larger ones. In *COINr* the function is `denominate()`. The specifications are either made initially in `IndMeta`, or as arguments to `COINr::denominate()`. In the case of the ASEM data set, these are included in `IndMeta` so the command is very simple.
+Denomination involves dividing indicators by e.g. GDP or population to be able to compare small units/countries with larger ones. In *COINr* the function is `denominate()`. The specifications are either made initially in `IndMeta`, or as arguments to `denominate()`. In the case of the ASEM data set, these are included in `IndMeta` so the command is very simple.
 
 ```{r}
 # create denominated data set
-ASEM <- COINr::denominate(ASEM, dset = "Raw", specby = "metadata")
+ASEM <- denominate(ASEM, dset = "Raw", specby = "metadata")
 ```
 
 Notice the syntax of the function. The first argument is always a COIN or data frame. Then the options include  `dset` (which data set to denominate, which must correspond to the name of a data set in `.$Data`), and `specby` (whether to use the specifications in `IndMeta` or to specify new variables and a mapping for denomination. Like all functions discussed in this paper, more options are available which are not discussed here due to space limitations, but can be explored using e.g. `?denominate`.
 
-Since `COINr::denominate()` is a construction function it has added a new data set "Denominated" to `.$Data`, with columns divided by denominating variables as specified in `IndMeta`. Its function arguments have been written to `.$Method`.
+Since `denominate()` is a construction function it has added a new data set "Denominated" to `.$Data`, with columns divided by denominating variables as specified in `IndMeta`. Its function arguments have been written to `.$Method`.
 
 ```{r}
 names(ASEM$Data)
@@ -371,7 +371,7 @@ To impute in *COINr* the `impute()` function is called. The types of imputation 
 As an example, the data will be imputed using the median of the GDP group.
 
 ```{r}
-ASEM <- COINr::impute(ASEM, dset = "Denominated", imtype = "indgroup_mean",
+ASEM <- impute(ASEM, dset = "Denominated", imtype = "indgroup_mean",
                groupvar = "Group_GDP")
 ```
 
@@ -381,10 +381,10 @@ Again, this creates a new data set `.$Data$Imputed` and writes function argument
 
 Outlier treatment is common in composite indicators because outlying values can dominate the scale of in indicator (units will have very similar scores except the outlying unit). However, whether or not data is treated, and how the treatment is performed, will depend on the objectives of the composite indicator.
 
-*COINr* has a flexible set of options based on Winsorisation, (scaled) log transformations and Box-Cox transformations. Calling `COINr::treat()` by default applies a standard approach which Winsorises each indicator up to a specified limit of points, in order to bring the skew and kurtosis of each indicator below specified thresholds. If Winsorisation fails, it applies a log transformation or similar. This is done on each indicator separately. Here we Winsorise the imputed data up to a limit of five points per indicator.
+*COINr* has a flexible set of options based on Winsorisation, (scaled) log transformations and Box-Cox transformations. Calling `treat()` by default applies a standard approach which Winsorises each indicator up to a specified limit of points, in order to bring the skew and kurtosis of each indicator below specified thresholds. If Winsorisation fails, it applies a log transformation or similar. This is done on each indicator separately. Here we Winsorise the imputed data up to a limit of five points per indicator.
 
 ```{r}
-ASEM <- COINr::treat(ASEM, dset = "Imputed", winmax = 5)
+ASEM <- treat(ASEM, dset = "Imputed", winmax = 5)
 ```
 
 Following treatment, it is a good idea to check which indicators were treated and how:
@@ -396,12 +396,12 @@ ASEM$Analysis$Treated$TreatSummary %>%
   filter(Treatment != "None")
 ```
 
-This shows that ten indicators were Winsorised, all by Winsorising high values, and with four or less points treated in each case. Since all indicators were brought below specified skew and kurtosis thresholds within the maximum number of Winsorised points (5), no log transformations were applied. We could also call `COINr::getStats()` again here to check the new data set.
+This shows that ten indicators were Winsorised, all by Winsorising high values, and with four or less points treated in each case. Since all indicators were brought below specified skew and kurtosis thresholds within the maximum number of Winsorised points (5), no log transformations were applied. We could also call `getStats()` again here to check the new data set.
 
-It is also a good idea to visualise and compare the treated data against the untreated data. The best way to do this interactively is to call `COINr::indDash()` again, which allows comparison of treated and untreated indicators side by side. We can also do this manually (or for presentation) for specific indicators.
+It is also a good idea to visualise and compare the treated data against the untreated data. The best way to do this interactively is to call `indDash()` again, which allows comparison of treated and untreated indicators side by side. We can also do this manually (or for presentation) for specific indicators.
 
 ```{r, eval=F}
-COINr::iplotIndDist2(ASEM, dsets = c("Imputed", "Treated"),
+iplotIndDist2(ASEM, dsets = c("Imputed", "Treated"),
               icodes = "Services", ptype = "Scatter")
 ```
 
@@ -409,28 +409,28 @@ COINr::iplotIndDist2(ASEM, dsets = c("Imputed", "Treated"),
 knitr::include_graphics("images/treated_scatter-min.png")
 ```
 
-The plot shows the Winsorisation of four points for the "Services" indicator. This could also be plotted in different ways using box plots or violin plots which are also available in *COINr*. Note that `COINr::treat()` allows fairly detailed specification of data treatment, including individual specification for each indicator, control over thresholds and various nonlinear transformations.
+The plot shows the Winsorisation of four points for the "Services" indicator. This could also be plotted in different ways using box plots or violin plots which are also available in *COINr*. Note that `treat()` allows fairly detailed specification of data treatment, including individual specification for each indicator, control over thresholds and various nonlinear transformations.
 
 ## Normalisation
 
 The next step before aggregation is to normalise the data. This means bringing the data onto a common scale, i.e. matching certain statistics between indicators. In the ASEM index we will use a simple min-max normalisation in the $[0, 100]$ interval.
 
 ```{r}
-ASEM <- COINr::normalise(ASEM, dset = "Treated", ntype = "minmax",
+ASEM <- normalise(ASEM, dset = "Treated", ntype = "minmax",
                   npara = list(minmax = c(0,100)))
 ```
 
-Further possibilities for normalisation include z-scores, rank transformations, percentile ranks, distance to a maximum, to specified indicator targets or to a reference unit. It is also possible to pass a custom normalisation function to `COINr::normalise()`.
+Further possibilities for normalisation include z-scores, rank transformations, percentile ranks, distance to a maximum, to specified indicator targets or to a reference unit. It is also possible to pass a custom normalisation function to `normalise()`.
 
 ## Aggregation
 
 The last construction step (apart from iterative changes) is to aggregate. In the example here we use a simple weighted arithmetic mean. As explained in [Inside a COIN], the structure of the index, and the weights, are stored in the `IndMeta` data frame inside the COIN, so *COINr* only needs to know which method to use to aggregate.
 
 ```{r}
-ASEM <- COINr::aggregate(ASEM, agtype = "arith_mean", dset = "Normalised")
+ASEM <- aggregate(ASEM, agtype = "arith_mean", dset = "Normalised")
 ```
 
-This command takes the weighted arithmetic mean of the normalised indicator data, within each aggregation group. This is used to calculate the scores of each aggregation group at level 2. Then the level 2 scores are themselves aggregated to level 3 scores, and finally to the index in level 4. In short, `COINr::aggregate()` aggregates indicator values following the hierarchical structure specified in `IndMeta`.
+This command takes the weighted arithmetic mean of the normalised indicator data, within each aggregation group. This is used to calculate the scores of each aggregation group at level 2. Then the level 2 scores are themselves aggregated to level 3 scores, and finally to the index in level 4. In short, `aggregate()` aggregates indicator values following the hierarchical structure specified in `IndMeta`.
 
 Aggregation options include the arithmetic, geometric and harmonic means, the median, the Copeland method, and the possibility to pass a custom aggregation function. This latter could be used, for example, to access more advanced aggregation methods available in other packages, such as the *compind* package.
 
@@ -449,7 +449,7 @@ Inspecting the `.$Method` folder shows that all function arguments have also bee
 At this point, the aggregated scores have been calculated. It is still of course possible to make changes, but first it is convenient to visualise the scores. *COINr* gives several options in this respect. A fast first option is to use *COINr*'s `resultsDash()` app for quickly and interactively exploring the results. To call the app, simply run:
 
 ```{r resultsApp, eval=F}
-COINr::resultsDash(ASEM)
+resultsDash(ASEM)
 ```
 
 The app, which is shown below as a screenshot, allows you to select any of the data sets present in `.$Data`, and to plot any of the indicators inside either on a bar chart or map. Units (i.e. countries here) can also be compared on a radar chart. Results can also be explored in an interactive table on the second tab.
@@ -458,10 +458,10 @@ The app, which is shown below as a screenshot, allows you to select any of the d
 knitr::include_graphics("images/resultsDash_screenshot-min.png")
 ```
 
-The plots in `COINr::resultsDash()` can also be created individually (outside of the *shiny* environment). For example, a good way to show results at the index level is a stacked bar chart, as follows.
+The plots in `resultsDash()` can also be created individually (outside of the *shiny* environment). For example, a good way to show results at the index level is a stacked bar chart, as follows.
 
 ```{r, eval=F}
-COINr::iplotBar(ASEM, dset = "Aggregated", isel = "Index",
+iplotBar(ASEM, dset = "Aggregated", isel = "Index",
          aglev = 4, stack_children = T)
 ```
 
@@ -472,7 +472,7 @@ knitr::include_graphics("images/stacked_bar-min.png")
 Similarly, the sub-index values can be plotted against each other as follows:
 
 ```{r, eval=F}
-plt <- COINr::iplotIndDist2(ASEM, dsets = "Aggregated",
+plt <- iplotIndDist2(ASEM, dsets = "Aggregated",
                      icodes = c("Conn", "Sust"), aglevs = 3)
 plotly::layout(plt, xaxis = list(title = "Connectivity"),
                   yaxis = list(title = "Sustainability"))
@@ -487,17 +487,17 @@ Notice that since *COINr* plots are powered by either *plotly* or *ggplot2* (dep
 If ISO alpha-3 codes are used as the unit codes, *COINr* gives a quick way to plot a map of any indicator or aggregated value, from any data set. The following plots the connectivity sub-index:
 
 ```{r, eval=FALSE}
-COINr::iplotMap(ASEM, dset = "Aggregated", isel = "Conn")
+iplotMap(ASEM, dset = "Aggregated", isel = "Conn")
 ```
 
 ```{r choro, echo=F, fig.align = 'center', out.width = "100%", fig.cap = "Choropleth map of ASEM Connectivity."}
 knitr::include_graphics("images/choropleth-min.png")
 ```
 
-For a tabular format, `COINr::getResults()` gives several different varieties of results table, including simple tables of just index scores, up to full tables of all scores or ranks for every indicator. The following generates a simple sorted table at the index level for quick display.
+For a tabular format, `getResults()` gives several different varieties of results table, including simple tables of just index scores, up to full tables of all scores or ranks for every indicator. The following generates a simple sorted table at the index level for quick display.
 
 ```{r}
-rslts <- COINr::getResults(ASEM, tab_type = "Summary")
+rslts <- getResults(ASEM, tab_type = "Summary")
 head(rslts, 10)
 ```
 
@@ -508,7 +508,7 @@ Having calculated results, *COINr* has a simple but quick way to export the enti
 
 ```{r, eval=F}
 # Export entire COIN to Excel
-COINr::coin2Excel(ASEM, "ASEM_results.xlsx")
+coin2Excel(ASEM, "ASEM_results.xlsx")
 ```
 
 This command writes each data frame to a separate tab, and will write any results tables, data sets, input data and analysis tables that are present. This can be useful for quickly sharing results outside of R.
@@ -519,13 +519,13 @@ This section has given a fast example of *COINr* functions for building a compos
 
 # Analysing a composite indicator {#Sec:Analysing}
 
-Building and analysing a composite indicator are different tasks, although they overlap to a large extent. In building a composite indicator, it is also a good idea to analyse it to better understand the data and what is going on. Indeed, the previous section touched on some analysis features by demonstrating the `COINr::getStats()` function. Here, further analysis tools are described.
+Building and analysing a composite indicator are different tasks, although they overlap to a large extent. In building a composite indicator, it is also a good idea to analyse it to better understand the data and what is going on. Indeed, the previous section touched on some analysis features by demonstrating the `getStats()` function. Here, further analysis tools are described.
 
-We begin by assuming that the composite indicator has been constructed and is available in a COIN. In this case, it is the ASEM COIN which can be generated using `ASEM <- COINr::build_ASEM()`. Note that if the aim is to analyse a composite indicator for which raw data is *not* available, but only aggregated data, `COINr::assemble()` has a functionality to accept pre-aggregated data by setting `preagg = TRUE`.
+We begin by assuming that the composite indicator has been constructed and is available in a COIN. In this case, it is the ASEM COIN which can be generated using `ASEM <- build_ASEM()`. Note that if the aim is to analyse a composite indicator for which raw data is *not* available, but only aggregated data, `assemble()` has a functionality to accept pre-aggregated data by setting `preagg = TRUE`.
 
 ## Data checks
 
-Apart from checking indicator statistics using `COINr::getStats()`, the data availability can also be checked in detail using `COINr::checkData()`.
+Apart from checking indicator statistics using `getStats()`, the data availability can also be checked in detail using `checkData()`.
 
 ```{r}
 ASEM <- checkData(ASEM, dset = "Raw")
@@ -535,10 +535,10 @@ missdat <- ASEM$Analysis$Raw$MissDatByGroup[1:8]
 roundDF(tail(missdat, 10))
 ```
 
-It may also be useful to plot the distributions of indicators. This can be quickly explored using `COINr::indDash()`, but for presentation purposes *COINr* has fast options for plotting distributions by groups. For example, to plot indicator distributions in the "Political" pillar:
+It may also be useful to plot the distributions of indicators. This can be quickly explored using `indDash()`, but for presentation purposes *COINr* has fast options for plotting distributions by groups. For example, to plot indicator distributions in the "Political" pillar:
 
 ```{r PolDists, message=F, warning=F, fig.width=7, fig.cap="Indicator distributions in the Political pillar."}
-COINr::plotIndDist(ASEM, dset = "Raw", icodes = "Political",
+plotIndDist(ASEM, dset = "Raw", icodes = "Political",
                    type = "Violindot")
 ```
 
