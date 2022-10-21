@@ -190,7 +190,7 @@ effectiveWeight <- function(COIN){
   if ("COIN" %in% class(COIN)){ # COIN obj
 
     wts_eff_list <- COIN$Parameters$Weights$Original
-    wts_eff_list$Weight <- wts_eff
+    wts_eff_list$Weight <- wts_eff[match(wts_eff_list$Code, lbls_prnts$Labels)]
     colnames(wts_eff_list)[3] <- "EffectiveWeight"
 
     return(list(EffectiveWeights = wts_eff,
